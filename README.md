@@ -1,2 +1,2 @@
 # portfolio-website
-Portfolio website to showcase projects, resume, etc.
+Portfolio website to showcase my projects, resume, etc.

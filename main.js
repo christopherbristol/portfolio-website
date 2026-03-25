@@ -37,30 +37,28 @@ async function initWebGPU() {
         code: `
             struct VertexOutput {
                 @builtin(position) position : vec4f,
-                @location(0) color : vec4f,
-                @location(1) uv : vec2f
+                @location(0) uv : vec2f
             };
 
             @vertex
-            fn vertex_main(@builtin(vertex_index) vertexIndex : u32) -> VertexOutput {
-                var positions = array<vec2<f32>, 4>(
-                    vec2<f32>(-1.0, -1.0),
-                    vec2<f32>(1.0, -1.0),
-                    vec2<f32>(-1.0, 1.0),
-                    vec2<f32>(1.0, 1.0)
+            fn vertex_main(@builtin(vertex_index) vertexIndex: u32) -> VertexOutput {
+                var positions = array<vec2f>(
+                    vec2f(-1.0, -1.0),
+                    vec2f(1.0, -1.0),
+                    vec2f(-1.0, 1.0),
+                    vec2f(1.0, 1.0),
                 );
 
-                var uvs = array<vec2<f32>, 4>(
-                    vec2<f32>(0.0, 0.0),
-                    vec2<f32>(1.0, 0.0),
-                    vec2<f32>(0.0, 1.0),
-                    vec2<f32>(1.0, 1.0)
+                var uvs = array<vec2f>(
+                    vec2f(0.0, 0.0),
+                    vec2f(1.0, 0.0),
+                    vec2f(0.0, 1.0),
+                    vec2f(1.0, 1.0),
                 );
 
-                var output : VertexOutput;
-                output.position = vec4<f32>(positions[vertexIndex], 0.0, 1.0);
+                var output: VertexOutput;
+                output.position = vec4f(positions[vertexIndex], 0.0, 1.0);
                 output.uv = uvs[vertexIndex];
-                output.color = vec4<f32>(0.1, 0.2, 0.4, 1.0);
                 return output;
             }
         `
@@ -69,14 +67,16 @@ async function initWebGPU() {
     const fragmentShader = device.createShaderModule({
         code: `
             struct FragmentInput {
-                @location(0) color : vec4<f32>,
-                @location(1) uv : vec2<f32>
+                @location(0) color: vec4f,
+                @location(1) uv: vec2f,
+                @location(2) normal: vec2f,
             };
 
-            @group(0) @binding(0) var<uniform> time : f32;
+            @group(0) @binding(0)
+            var<uniform> time: f32;
 
             @fragment
-            fn fragment_main(input : FragmentInput) -> @location(0) vec4<f32> {
+            fn fragment_main(input: FragmentInput) -> @location(0) vec4f {
                 let uv = input.uv * 2.0 - 1.0;
                 let len = length(uv);
 
